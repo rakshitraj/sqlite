@@ -65,7 +65,7 @@ InputBuffer* new_input_buffer() {
     return input_buffer;
 }
 
-// Utility bloc
+// Utility blocf
 
 void print_prompt(){
     printf("db > ");
@@ -133,7 +133,7 @@ const uint32_t USERNAME_SIZE = size_of_attribute(Row, username);
 const uint32_t EMAIL_SIZE = size_of_attribute(Row, email);
 const uint32_t ID_OFFSET = 0;
 const uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
-const uint32_t EMAIL_OFFSET = ID_OFFSET + ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
+const uint32_t EMAIL_OFFSET = USERNAME_OFFSET + EMAIL_SIZE;
 const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
 const uint32_t PAGE_SIZE = 4096;
