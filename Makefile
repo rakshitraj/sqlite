@@ -1,7 +1,9 @@
 .DEFAULT_GOAL := db
 
 db:
-	mkdir build 
+	if [ ! -d "build" ]; then \
+		mkdir build; \
+	fi 
 	gcc db.c -o build/db
 
 run:
