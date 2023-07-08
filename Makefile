@@ -1,10 +1,11 @@
 .DEFAULT_GOAL := db
 
 db:
-	gcc db.c -o db
+	mkdir build 
+	gcc db.c -o build/db
 
 run:
-	./db
+	.build/db
 
 clean:
-	rm db
+	rm -rf build
