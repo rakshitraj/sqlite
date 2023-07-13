@@ -310,8 +310,9 @@ void* row_slot(Table* table, uint32_t row_num) {
 
 // Meta-command bloc
 
-MetaCommandResult do_meta_command(InputBuffer* input_buffer) {
+MetaCommandResult do_meta_command(InputBuffer* input_buffer, Table* table) {
     if (strcmp(input_buffer->buffer, ".exit") == 0) {
+        db_close(table);
         exit(EXIT_SUCCESS);
     }
     else {
@@ -361,7 +362,7 @@ int main(int argc, char* argv[]) {
 
         if (input_buffer->buffer[0] == '.')
         {
-            switch(do_meta_command(input_buffer)) {
+            switch(do_meta_command(input_buffer, table)) {
                 case (META_COMMAND_SUCCESS):
                     continue;
                 case (META_COMMAND_UNRECOGNIZED_COMMAND):
