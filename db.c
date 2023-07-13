@@ -229,7 +229,7 @@ void* get_page(Pager* pager, uint32_t page_num) {
     return pager->pages[page_num];
 }
 
-void page_flush(Pager* pager, uint32_t page_num, uint32_t size) {
+void pager_flush(Pager* pager, uint32_t page_num, uint32_t size) {
     if (pager->pages[page_num] == NULL) {
         printf("Tried to flush null page.\n");
         exit(EXIT_FAILURE);
@@ -245,7 +245,7 @@ void page_flush(Pager* pager, uint32_t page_num, uint32_t size) {
     ssize_t bytes_written = write(pager->file_descriptor, pager->pages[page_num], size);
 
     if (bytes_written == -1) {
-        print("Error writing: %d\n", errno);
+        printf("Error writing: %d\n", errno);
         exit(EXIT_FAILURE);
     }
 }
@@ -277,7 +277,7 @@ void db_close(Table* table) {
         }
         pager_flush(pager, i, PAGE_SIZE); {
         free(pager->pages[i]);
-        pager->pages[i] == NULL;
+        pager->pages[i] = NULL;
         }
     }
 
@@ -382,7 +382,7 @@ int main(int argc, char* argv[]) {
 
     char* filename = argv[1];
     Table* table = db_open(filename);
-    
+
     InputBuffer* input_buffer = new_input_buffer();
     while (true) {
         print_prompt();
