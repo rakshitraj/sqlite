@@ -1,7 +1,7 @@
 describe 'database' do
     def run_script(commands)
         raw_output = nil
-        IO.popen("./build/db", "r+") do |pipe|
+        IO.popen("./build/db test.db", "r+") do |pipe|
             commands.each do |command|
                 pipe.puts command
             end
@@ -11,6 +11,20 @@ describe 'database' do
             raw_output = pipe.gets(nil)
         end
         raw_output.split("\n")
+    end
+
+    def reset_db()
+        if File.exist?("test.db")
+            begin
+                File.delete("test.db")
+                return 0
+                rescue StandardError
+                    return 1
+            end
+        end
+
+        # If file doesn't exist consider it a success
+        return 0
     end
 
     it 'inserts and retrieves a row' do
@@ -25,6 +39,10 @@ describe 'database' do
             "Executed.",
             "db > ",
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 
     it 'prints error messsage when table is full' do
@@ -34,6 +52,10 @@ describe 'database' do
         script << ".exit"
         result = run_script(script)
         expect(result[-2]).to eq('db > Error: Table full.')
+        
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 
     it 'allows inserting strings that are the maximum length' do
@@ -51,6 +73,10 @@ describe 'database' do
             "Executed.",
             "db > ",
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 
     it 'prints error message if strings are too long' do
@@ -67,6 +93,10 @@ describe 'database' do
             "db > Executed.",
             "db > ",
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 
     it 'prints an error message if ID is negative' do 
@@ -81,11 +111,15 @@ describe 'database' do
             "db > Executed.",
             "db > ",
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 
     it 'keeps data after closing connection' do 
         result1 = run_script([
-            "insert 1 foo fo@bar.com",
+            "insert 1 foo foo@bar.com",
             ".exit"
         ])
         expect(result1).to match_array([
@@ -101,5 +135,9 @@ describe 'database' do
             "Executed.",
             "db > ",
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 end
