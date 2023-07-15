@@ -349,6 +349,24 @@ typedef struct {
     bool end_of_table;
 } Cursor;
 
+Cursor* table_start(Table* table) {
+    Cursor* cursor = malloc(sizeof(Cursor));
+    cursor->table = table;
+    cursor->row_num = 0;
+    cursor->end_of_table = (table->num_rows == 0);
+
+    return cursor;
+}
+
+Cursor* table_end(Table* table) {
+    Cursor* cursor = malloc(sizeof(Cursor));
+    cursor->table = table;
+    cursor->row_num = table->num_rows;
+    cursor->end_of_table = true;
+
+    return cursor;
+}
+
 // Meta-command bloc
 
 MetaCommandResult do_meta_command(InputBuffer* input_buffer, Table* table) {
