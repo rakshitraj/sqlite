@@ -341,6 +341,14 @@ void* row_slot(Table* table, uint32_t row_num) {
     return page + byte_offset;
 }
 
+// Cursor
+
+typedef struct {
+    Table* table;
+    uint32_t row_num;
+    bool end_of_table;
+} Cursor;
+
 // Meta-command bloc
 
 MetaCommandResult do_meta_command(InputBuffer* input_buffer, Table* table) {
