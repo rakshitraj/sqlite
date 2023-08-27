@@ -71,7 +71,7 @@ InputBuffer* new_input_buffer() {
     return input_buffer;
 }
 
-// Utility blocf
+// Utility bloc
 
 void print_prompt(){
     printf("db > ");
@@ -432,6 +432,45 @@ ExecuteResult execute_statement(Statement* statement, Table* table) {
     }
 }
 
+// Database bloc
+
+typedef enum {
+    NODE_INTERNAL,
+    NODE_LEAF
+} NodeType;
+
+/*
+ * Common node Header Layout 
+ * 
+ * Nodes need to store some metadata in the header at the be=ginning of every page. theis information is common across all nodes.
+ * Every node will store the type of node is, weather or not it is the root node, and the address of it parent so that we can find its sibling nodes.
+ * The offset caused due to storing this information is calculated and reference below. 
+ */
+const uint32_t NODE_TYPE_SIZE = sizeof(uint8_t);
+const uint32_t NODE_TYPE_OFFSET = 0;
+const uint32_t IS_ROOT_SIZE = sizeof(uint8_t);
+const uint32_t IS_ROOT_OFFSET = NODE_TYPE_SIZE;
+const uint32_t PARENT_POINTER_SIZE = sizeof(uint32_t);
+const uint32_t PARENT_POINTER_OFFSET = IS_ROOT_OFFSET + IS_ROOT_SIZE;
+const uint8_t COMMON_NODE_HEADER_SIZE = NODE_TYPE_SIZE + IS_ROOT_SIZE + PARENT_POINTER_SIZE;
+
+/*
+* Leaf Node Header Layout
+*/
+const uint32_t LEAF_NODE_NUM_CELLS_SIZE = sizeof(uint32_t);
+const uint32_t LEAF_NODE_NUM_CELLS_OFFSET = COMMON_NODE_HEADER_SIZE;
+const uint32_t LEAF_NODE_HEADER_SIZE = COMMON_NODE_HEADER_SIZE + LEAF_NODE_NUM_CELLS_SIZE;
+
+/*
+* Leaf Node Body Layout
+*/
+const uint32_t LEAF_NODE_KEY_SIZE = sizeof(uint32_t);
+const uint32_t LEAF_NODE_KEY_OFFSET = 0;
+const uint32_t LEAF_NODE_VALUE_SIZE = ROW_SIZE;
+const uint32_t LEAF_NODE_VALUE_OFFSET = LEAF_NODE_KEY_OFFSET + LEAF_NODE_KEY_SIZE;
+const uint32_t LEAF_NODE_CELL_SIZE = LEAF_NODE_KEY_SIZE + LEAF_NODE_VALUE_SIZE;
+const uint32_t LEAF_NODE_SPACE_FOR_CELLS = PAGE_SIZE - LEAF_NODE_HEADER_SIZE;
+const uint32_t LEAF_NODE_MAX_CELLS = LEAF_NODE_SPACE_FOR_CELLS / LEAF_NODE_CELL_SIZE;
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
