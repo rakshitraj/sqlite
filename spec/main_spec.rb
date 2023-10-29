@@ -160,6 +160,10 @@ describe 'database' do
           "  - 2 : 2",
           "db > "
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
     
     it 'prints constants' do
@@ -179,5 +183,9 @@ describe 'database' do
           "LEAF_NODE_MAX_CELLS: 13",
           "db > ",
         ])
+
+        # Reset the database
+        reset_result = reset_db()
+        expect(reset_result).to eq(0), "Failed to reset the database. Delete operation failed."
     end
 end
