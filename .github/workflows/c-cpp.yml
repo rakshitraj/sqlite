@@ -1,0 +1,27 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" , "feature/*"]
+  pull_request:
+    branches: [ "main" , "feature/*"]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: setup
+      run: apt install -y gcc make ruby-rspec-core
+    - name: Install gems
+      run: |
+        gem install bundle
+        bundle install
+    - name: make
+      run: make
+    - name: make test
+      run: make test
+    - name: make clean
+      run: make clean
