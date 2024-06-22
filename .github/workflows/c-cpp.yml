@@ -16,8 +16,9 @@ jobs:
     - name: setup
       run: apt install -y gcc make ruby-rspec-core
     - name: Install gems
-      run: gem install bundle
-      run: bundle install
+      run: |
+        gem install bundle
+        bundle install
     - name: make
       run: make
     - name: make test
