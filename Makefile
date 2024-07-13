@@ -3,32 +3,32 @@
 
 .SILENT: db
 .PHONY: db
-db: db.c 
+db: src/main.c 
 	echo "build: Creating target db..."
 	if [ ! -d "build" ]; then \
 		mkdir build; \
 	fi 
-	gcc db.c -o build/db
+	gcc src/main.c -o build/db
 
 
 .SILENT: test
 .PHONY: test
-test: db build/db spec
+test: build/db spec
 	echo "build: Creating target test..."
 	bundle exec rspec
 
 
 .SILENT: run
 .PHONY: run
-run: db
+run: build/db
 	echo "build: Creating target run..."
-	build/db make.db
-	rm make.db
+	build/db build/make.db
+	rm build/make.db
 
 
 .PHONY: launch
-launch: db build/db
-	build/db mydb.db
+launch: build/db
+	build/db res/mydb.db
 
 
 .PHONY: clean
